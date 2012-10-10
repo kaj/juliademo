@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="cplx.css"/>
+    <script type="text/javascript" src="Complex.js"></script>
+    <script type="text/javascript" src="juliademo.js"></script>
+  </head>
+  <body>
+    <h1>Complex mk 2</h1>
+    <canvas id="field" width="500" height="400"></canvas>
+    
+    <script type="text/javascript">
+      var canvas = document.getElementById('field');
+      var demo = JuliaDemo(canvas);
+      var c = Complex(-0.8, 0.5);
+      demo.render(c)
+    </script>
+  </body>
+</html>
