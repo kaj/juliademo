@@ -27,5 +27,13 @@ Complex.prototype = {
     
     mod: function() {
 	return Math.sqrt(this.real * this.real + this.imag * this.imag);
-    }
+    },
+
+    toString: function() {
+	if (this.imag >= 0) {
+	    return this.real.toFixed(4) + '+' + this.imag.toFixed(4) + 'i';
+	} else {
+	    return this.real.toFixed(4) + '' + this.imag.toFixed(4) + 'i';
+	}
+    },
 };

@@ -30,6 +30,11 @@ JuliaDemo.prototype = {
             }
         }
         var elapsed = performance.now() - timing;
+        var info = document.getElementById('info');
+        if (info) {
+            info.innerHTML = 'c: ' + c + '<br>step: ' + this.step +
+                '<br>elapsed: ' + elapsed.toFixed() + 'ms';
+        }
 	if (elapsed < 100 /* ms */ && this.step > 1) {
             this.step = this.step - 1;
 	} else if(elapsed > 250) {

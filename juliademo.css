@@ -18,6 +18,17 @@ p {
     text-align:center;
     margin: 1em auto;
 }
+#info {
+  border-radius:.3em;
+  border:solid 1px;
+  bottom:0;
+  box-shadow:0 0 1em #008800;
+  font:90% sans-serif;
+  left:0;
+  margin:1ex;
+  padding:.3em;
+  position:fixed;
+}
 .box {
     background:#000000;
     border: solid 1px #00ff00;
