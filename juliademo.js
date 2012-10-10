@@ -8,16 +8,23 @@ var JuliaDemo = function(canvas) {
 
 JuliaDemo.prototype = {
     step: 10,
+    maxiter: 20,
+    
     v: function(z, c) {
         var it = 0;
-        while (it < 20 && z.mod() < 1.7) {
+        while (it < this.maxiter && z.mod() < 1.7) {
             z = z.multiply(z).add(c);
             it = it + 1;
         }
         return it;
     },
     color: function(i) {
-        return "rgb(" + (255-12*i) + "," + (7*i) + "," + (210-19*Math.abs(i-10)) + ")";
+        if (i >= this.maxiter) {
+            return 'black';
+        } else {
+            var x = i / this.maxiter;
+            return "rgb(" + (255-250*x).toFixed() + "," + (180*x).toFixed() + "," + (210-420*Math.abs(x-.5)).toFixed() + ")";
+        }
     },
     render: function(c) {
 	var timing = performance.now()
