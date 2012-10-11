@@ -1,6 +1,7 @@
 var JuliaDemo = function(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
+    this.initPalette();
 }
 
 JuliaDemo.prototype = {
@@ -23,6 +24,12 @@ JuliaDemo.prototype = {
             return '#' + rgb.toString(16);
         }
     },
+    initPalette: function() {
+        this.palette = []
+        for (var i = 0; i <= this.maxiter; ++i) {
+            this.palette.push(this.color(i));
+        }
+    },
     render: function() {
         var timing = performance.now(),
             r = 0.5 + Math.sin(timing/4000)*0.4,
@@ -30,7 +37,7 @@ JuliaDemo.prototype = {
         for (var x = 0; x < 500; x += this.step) {
             for (var y = 0; y < 400; y += this.step) {
                 var z = new Complex((x-250)/200, (y-200)/170);
-                this.ctx.fillStyle = this.color(this.v(z,c));
+                this.ctx.fillStyle = this.palette[this.v(z,c)];
                 this.ctx.fillRect(x, y, this.step, this.step);
             }
         }
