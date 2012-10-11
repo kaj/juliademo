@@ -11,7 +11,10 @@ JuliaDemo.prototype = {
     v: function(z, c) {
         var it = 0;
         while (++it < this.maxiter && z.sqmod() < 2.89) {
-            z = z.sqr().add(c);
+            //z = z.sqr().add(c);
+            var tmp = z.real*z.real - z.imag*z.imag + c.real;
+            z.imag = 2*z.real*z.imag + c.imag;
+            z.real = tmp;
         }
         return it;
     },
