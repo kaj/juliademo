@@ -7,6 +7,7 @@ var JuliaDemo = function(canvas) {
 JuliaDemo.prototype = {
     step: 10,
     maxiter: 20,
+    running: true,
     
     v: function(z, c) {
         var it = 0;
@@ -55,7 +56,9 @@ JuliaDemo.prototype = {
 	} else if(elapsed > 250) {
             this.step = this.step + 1;
 	}
-        var demo = this;
-        setTimeout(function() {demo.render()}, 25)
+        if (this.running) {
+            var demo = this;
+            setTimeout(function() {demo.render()}, 25)
+        }
     }
 }
