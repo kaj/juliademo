@@ -1,11 +1,7 @@
 var Complex = function(real, imag) {
-	if (!(this instanceof Complex)) {
-		return new Complex (real, imag);
-	}
-	this.real = Number(real) || 0;
-	this.imag = Number(imag) || 0;
+    this.real = Number(real) || 0;
+    this.imag = Number(imag) || 0;
 };
-
 
 Complex.prototype = {
     real: 0,
@@ -24,9 +20,19 @@ Complex.prototype = {
 	    this.real * operand.real - this.imag * operand.imag,
 	    this.real * operand.imag + this.imag * operand.real);
     },
-    
+
+    sqr: function() {
+	return new Complex(
+	    this.real*this.real - this.imag*this.imag,
+	    2*this.real*this.imag);
+    },
+
     mod: function() {
 	return Math.sqrt(this.real * this.real + this.imag * this.imag);
+    },
+
+    sqmod: function() {
+	return this.real*this.real + this.imag*this.imag;
     },
 
     toString: function() {

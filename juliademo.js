@@ -9,9 +9,8 @@ JuliaDemo.prototype = {
     
     v: function(z, c) {
         var it = 0;
-        while (it < this.maxiter && z.mod() < 1.7) {
-            z = z.multiply(z).add(c);
-            it = it + 1;
+        while (++it < this.maxiter && z.sqmod() < 2.89) {
+            z = z.sqr().add(c);
         }
         return it;
     },
