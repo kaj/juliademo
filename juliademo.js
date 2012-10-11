@@ -17,10 +17,11 @@ JuliaDemo.prototype = {
     },
     color: function(i) {
         if (i >= this.maxiter) {
-            return 'black';
+            return '#000';
         } else {
-            var x = i / this.maxiter;
-            return "rgb(" + (255-250*x).toFixed() + "," + (180*x).toFixed() + "," + (210-420*Math.abs(x-.5)).toFixed() + ")";
+            var x = i / this.maxiter,
+            rgb = (Math.round(240-240*x) << 16) | (Math.round(180*x) << 8) | (Math.round(210-420*Math.abs(x-.5)));
+            return '#' + rgb.toString(16);
         }
     },
     render: function() {
