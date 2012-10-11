@@ -1,7 +1,4 @@
 var JuliaDemo = function(canvas) {
-    if (!(this instanceof JuliaDemo)) {
-	return new JuliaDemo(canvas);
-    }
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 }
@@ -26,13 +23,14 @@ JuliaDemo.prototype = {
             return "rgb(" + (255-250*x).toFixed() + "," + (180*x).toFixed() + "," + (210-420*Math.abs(x-.5)).toFixed() + ")";
         }
     },
-    render: function(c) {
-	var timing = performance.now()
-        var x, y;
-        for (x = 0; x < 500; x += this.step) {
-            for (y = 0; y < 400; y += this.step) {
-	        var z = Complex((x-250)/220, (y-200)/180);
-	        this.ctx.fillStyle = this.color(this.v(z,c));
+    render: function() {
+        var timing = performance.now(),
+            r = 0.5 + Math.sin(timing/4000)*0.4,
+            c = new Complex(r*Math.sin(timing/2000), r*Math.cos(timing/2000));
+        for (var x = 0; x < 500; x += this.step) {
+            for (var y = 0; y < 400; y += this.step) {
+                var z = new Complex((x-250)/200, (y-200)/170);
+                this.ctx.fillStyle = this.color(this.v(z,c));
                 this.ctx.fillRect(x, y, this.step, this.step);
             }
         }
@@ -47,5 +45,7 @@ JuliaDemo.prototype = {
 	} else if(elapsed > 250) {
             this.step = this.step + 1;
 	}
+        var demo = this;
+        setTimeout(function() {demo.render()}, 25)
     }
 }
