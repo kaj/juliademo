@@ -21,11 +21,13 @@ JuliaDemo.prototype = {
     },
     color: function(i) {
         if (i >= this.maxiter) {
-            return '#000';
+            return 0xff000000;
         } else {
             var x = i / this.maxiter,
-            rgb = (Math.round(240-240*x) << 16) | (Math.round(180*x) << 8) | (Math.round(210-420*Math.abs(x-.5)));
-            return '#' + rgb.toString(16);
+            r = 0xff & Math.round(240-240*x),
+            g = 0xff & Math.round(180*x)
+            b = 0xff & Math.round(210-420*Math.abs(x-.5))
+            return (0xff << 24) | (b << 16) | (g << 8) | r;
         }
     },
     initPalette: function() {
@@ -38,13 +40,30 @@ JuliaDemo.prototype = {
         var timing = performance.now(),
             r = 0.5 + Math.sin(timing/4000)*0.4,
             c = new Complex(r*Math.sin(timing/2000), r*Math.cos(timing/2000));
+        
+        var imgData = this.ctx.getImageData(0,0,500,400),
+        buf = new ArrayBuffer(imgData.data.length),
+        buf8 = new Uint8ClampedArray(buf),
+        data = new Uint32Array(buf);
+        
         for (var x = 0; x < 500; x += this.step) {
             for (var y = 0; y < 400; y += this.step) {
                 var z = new Complex((x-250)/200, (y-200)/170);
-                this.ctx.fillStyle = this.palette[this.v(z,c)];
-                this.ctx.fillRect(x, y, this.step, this.step);
+                var v = this.palette[this.v(z,c)];
+                if (this.step == 1) {
+                    data[y * 500 + x] = v;
+                } else {
+                    for (var yy = y; yy < y+this.step; ++yy) {
+                        var i0 = yy * 500 + x;
+                        for (var i = i0; i < i0 + this.step; ++i) {
+                            data[i] = v;
+                        }
+                    }
+                }
             }
         }
+        imgData.data.set(buf8);
+        this.ctx.putImageData(imgData, 0,0);
         var elapsed = performance.now() - timing;
         var info = document.getElementById('info');
         if (info) {
