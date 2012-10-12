@@ -28,7 +28,7 @@ performance.now = (function() {
 
 JuliaDemo.prototype = {
     step: 10,
-    maxiter: 20,
+    maxiter: 100,
     running: true,
     
     v: function(z, c) {
@@ -45,7 +45,7 @@ JuliaDemo.prototype = {
         if (i >= this.maxiter) {
             return 0xff000000;
         } else {
-            var x = i / this.maxiter,
+            var x = Math.pow(i / this.maxiter, 1/3),
             r = 0xff & Math.round(240-240*x),
             g = 0xff & Math.round(180*x)
             b = 0xff & Math.round(210-420*Math.abs(x-.5))
@@ -96,9 +96,9 @@ JuliaDemo.prototype = {
             info.innerHTML = 'c: ' + c + '<br>step: ' + this.step +
                 '<br>elapsed: ' + elapsed.toFixed() + 'ms';
         }
-	if (elapsed < 25 /* ms */ && this.step > 1) {
+	if (elapsed < 30 /* ms */ && this.step > 1) {
             this.step = this.step - 1;
-	} else if(elapsed > 40) {
+	} else if(elapsed > 80) {
             this.step = this.step + 1;
 	}
         if (this.running) {
