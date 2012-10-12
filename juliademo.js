@@ -48,8 +48,8 @@ JuliaDemo.prototype = {
     },
     render: function() {
         var timing = performance.now(),
-            r = 0.5 + Math.sin(timing/4000)*0.4,
-            c = new Complex(r*Math.sin(timing/2000), r*Math.cos(timing/2000));
+            r = 0.7 + Math.sin(timing/9347)*0.4,
+            c = new Complex(r*Math.sin(timing/2000)-0.2, r*Math.cos(timing/2000));
         
         var imgData = this.ctx.getImageData(0,0,500,400),
         buf = new ArrayBuffer(imgData.data.length),
