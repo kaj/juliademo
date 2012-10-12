@@ -11,13 +11,6 @@ li { margin: 0 -1em 0 1em; padding: 0; }
 p {
     text-align:center;
 }
-#field {
-    font-family:monospace;
-    font-size:100%;
-    letter-spacing:1ex;
-    text-align:center;
-    margin: 1em auto;
-}
 #info {
   border-radius:.3em;
   border:solid 1px;
@@ -34,6 +27,10 @@ p {
     border: solid 1px #00ff00;
     border-radius:1ex;
     padding: 1ex 1em;
+}
+.wrap {
+    width: -moz-fit-content;
+    margin: auto;
 }
 .note {
     border: solid 1px #00aa00;
