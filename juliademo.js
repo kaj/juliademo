@@ -58,19 +58,17 @@ JuliaDemo.prototype = {
         buf8 = new Uint8ClampedArray(buf),
         data = new Uint32Array(buf);
         
+        var ws = this.w-this.step;
         for (var x = 0; x <= this.w - this.step; x += this.step) {
             for (var y = 0; y <= this.h - this.step; y += this.step) {
                 var z = new Complex((x+this.step/2-this.w/2)/200,
 				    (y+this.step/2-this.h/2)/170);
                 var v = this.palette[this.v(z,c)];
-                if (this.step == 1) {
-                    data[y * this.w + x] = v;
-                } else {
-                    for (var yy = y; yy < y+this.step; ++yy) {
-                        var i0 = yy * this.w + x;
-                        for (var i = i0; i < i0 + this.step; ++i) {
-                            data[i] = v;
-                        }
+                for (var yy = this.step, i0 = y * this.w + x;
+                     yy > 0;
+                     --yy, i0 += ws) {
+                    for (var xx = this.step; xx > 0; --xx) {
+                        data[i0++] = v;
                     }
                 }
             }
