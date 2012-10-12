@@ -1,5 +1,7 @@
 var JuliaDemo = function(canvas) {
     this.canvas = canvas;
+    this.w = canvas.width;
+    this.h = canvas.height;
     this.ctx = canvas.getContext('2d');
     this.initPalette();
 }
@@ -51,21 +53,21 @@ JuliaDemo.prototype = {
             r = 0.7 + Math.sin(timing/9347)*0.4,
             c = new Complex(r*Math.sin(timing/2000)-0.2, r*Math.cos(timing/2000));
         
-        var imgData = this.ctx.getImageData(0,0,500,400),
+        var imgData = this.ctx.getImageData(0,0,this.w,this.h),
         buf = new ArrayBuffer(imgData.data.length),
         buf8 = new Uint8ClampedArray(buf),
         data = new Uint32Array(buf);
         
-        for (var x = 0; x <= 500 - this.step; x += this.step) {
-            for (var y = 0; y <= 400 - this.step; y += this.step) {
-                var z = new Complex((x+this.step/2-250)/200,
-				    (y+this.step/2-200)/170);
+        for (var x = 0; x <= this.w - this.step; x += this.step) {
+            for (var y = 0; y <= this.h - this.step; y += this.step) {
+                var z = new Complex((x+this.step/2-this.w/2)/200,
+				    (y+this.step/2-this.h/2)/170);
                 var v = this.palette[this.v(z,c)];
                 if (this.step == 1) {
-                    data[y * 500 + x] = v;
+                    data[y * this.w + x] = v;
                 } else {
                     for (var yy = y; yy < y+this.step; ++yy) {
-                        var i0 = yy * 500 + x;
+                        var i0 = yy * this.w + x;
                         for (var i = i0; i < i0 + this.step; ++i) {
                             data[i] = v;
                         }
