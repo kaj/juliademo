@@ -3,6 +3,16 @@ var JuliaDemo = function(canvas) {
     this.ctx = canvas.getContext('2d');
     this.initPalette();
 }
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          window.oRequestAnimationFrame      ||
+          window.msRequestAnimationFrame     ||
+          function(/* function */ callback, /* DOMElement */ element){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
 
 JuliaDemo.prototype = {
     step: 10,
@@ -77,7 +87,7 @@ JuliaDemo.prototype = {
 	}
         if (this.running) {
             var demo = this;
-            setTimeout(function() {demo.render()}, 25)
+            requestAnimFrame(function() {demo.render()})
         }
     }
 }
