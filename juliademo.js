@@ -80,9 +80,9 @@ JuliaDemo.prototype = {
             info.innerHTML = 'c: ' + c + '<br>step: ' + this.step +
                 '<br>elapsed: ' + elapsed.toFixed() + 'ms';
         }
-	if (elapsed < 100 /* ms */ && this.step > 1) {
+	if (elapsed < 25 /* ms */ && this.step > 1) {
             this.step = this.step - 1;
-	} else if(elapsed > 250) {
+	} else if(elapsed > 40) {
             this.step = this.step + 1;
 	}
         if (this.running) {
