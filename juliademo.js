@@ -107,3 +107,64 @@ JuliaDemo.prototype = {
         }
     }
 }
+
+function mandelbrot(canvas) {
+
+    var canvas = canvas,
+        w = canvas.width,
+        h = canvas.height,
+        maxiter = 100,
+        ctx = canvas.getContext('2d'),
+        imgData = ctx.getImageData(0,0, w, h),
+        buf = new ArrayBuffer(imgData.data.length),
+        buf8 = new Uint8ClampedArray(buf),
+        data = new Uint32Array(buf),
+        y = 0;
+        x0 = 3*w/4 - 0.5;
+        y0 = h/2;
+        scale = 4/w;
+
+    function color(i) {
+        if (i >= maxiter) {
+            return 0xff000000;
+        } else {
+            var x = Math.pow(i / maxiter, 1/3),
+            r = 0xff & Math.round(240-240*x),
+            g = 0xff & Math.round(180*x)
+            b = 0xff & Math.round(210-420*Math.abs(x-.5))
+            return (0xff << 24) | (b << 16) | (g << 8) | r;
+        }
+    }
+
+    var palette = []
+    for (var i = 0; i <= maxiter; ++i) {
+        palette.push(color(i));
+    }
+
+    function mandel_iter(c) {
+        var it = 0;
+        var z = new Complex(0,0);
+        while (++it < maxiter && z.sqmod() < 4) {
+            //z = z.sqr().add(c);
+            var tmp = z.real*z.real - z.imag*z.imag + c.real;
+            z.imag = 2*z.real*z.imag + c.imag;
+            z.real = tmp;
+        }
+        //console.log(c + " -> " + it);
+        return it;
+    }
+    
+    function renderSome() {
+        if(y < h) {
+            for (var x = 0; x < w; ++x) {
+                var n = mandel_iter(new Complex(scale*(x-x0), scale*(y-y0)))
+                data[y * w + x] = palette[n];
+            }
+            imgData.data.set(buf8);
+            ctx.putImageData(imgData, 0,0);
+            ++y;
+            setTimeout(renderSome, 0);
+        }
+    }
+    renderSome();
+}
