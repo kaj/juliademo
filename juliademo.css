@@ -38,3 +38,12 @@ p {
     font-size:60%;
     margin:1em 15%;
 }
+.layered {
+    display: inline-block;
+    position: relative;
+}
+.layered canvas#marker {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

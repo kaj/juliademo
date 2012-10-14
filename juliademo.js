@@ -1,9 +1,51 @@
-var JuliaDemo = function(canvas) {
+/**
+ * pxw - width in pixels
+ * pxh - height in pixels
+ * z0 - target complex for center of window
+ * s - target distance from center to horiz edge of window
+ */
+var Transform = function(pxw, pxh, z0, s) {
+    this.w = pxw;
+    this.h = pxh;
+    this.scale = 2*s/this.w;
+    this.x0 = this.w/2 - z0.real/this.scale - 0.5;
+    this.y0 = this.h/2 - z0.imag/this.scale;
+}
+
+
+Transform.prototype = {
+    z2px: function(z) {
+        return { x: Math.round(z.real/this.scale + this.x0),
+                 y: Math.round(z.imag/this.scale + this.y0) }
+    },
+    px2z: function(x, y) {
+        return new Complex(this.scale*(x-this.x0),
+                           this.scale*(y-this.y0));
+    },
+}
+
+var JuliaDemo = function(canvas, marker) {
     this.canvas = canvas;
     this.w = canvas.width;
     this.h = canvas.height;
     this.ctx = canvas.getContext('2d');
     this.initPalette();
+    this.marker = {
+        init: function(marker) {
+            this.xform = new Transform(marker.width, marker.height,
+                                       new Complex(-0.6,0), 1.5);
+            this.ctx = marker.getContext('2d');
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            this.ctx.lineWidth = '1px';
+        },
+        
+        mark: function(z) {
+            var px = this.xform.z2px(z);
+            this.ctx.clearRect(px.x - 10, px.y - 10, 21, 21);
+            this.ctx.strokeRect(px.x -1, px.y - 1, 3, 3);
+        }
+    }
+    this.marker.init(marker);
 }
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||
@@ -67,6 +109,8 @@ JuliaDemo.prototype = {
         buf = new ArrayBuffer(imgData.data.length),
         buf8 = new Uint8ClampedArray(buf),
         data = new Uint32Array(buf);
+
+        this.marker.mark(c);
         
         var ws = this.w-this.step,
             x0 = this.w/2 - this.step/2,
@@ -108,7 +152,7 @@ JuliaDemo.prototype = {
     }
 }
 
-function mandelbrot(canvas) {
+function mandelbrot(canvas, xform) {
 
     var canvas = canvas,
         w = canvas.width,
@@ -120,9 +164,6 @@ function mandelbrot(canvas) {
         buf8 = new Uint8ClampedArray(buf),
         data = new Uint32Array(buf),
         y = 0;
-        x0 = 3*w/4 - 0.5;
-        y0 = h/2;
-        scale = 4/w;
 
     function color(i) {
         if (i >= maxiter) {
@@ -157,7 +198,7 @@ function mandelbrot(canvas) {
     function renderSome() {
         if(y < h) {
             for (var x = 0; x < w; ++x) {
-                var n = mandel_iter(new Complex(scale*(x-x0), scale*(y-y0)))
+                var n = mandel_iter(xform.px2z(x, y));
                 data[y * w + x] = palette[n];
             }
             imgData.data.set(buf8);
