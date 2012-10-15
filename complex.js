@@ -3,6 +3,10 @@ var Complex = function(real, imag) {
     this.imag = Number(imag) || 0;
 };
 
+function PolarComplex(r, phi) {
+    return new Complex(r * Math.sin(phi), r * Math.cos(phi));
+};
+
 Complex.prototype = {
     real: 0,
     imag: 0,
