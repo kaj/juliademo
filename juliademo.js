@@ -80,18 +80,7 @@ JuliaDemo.prototype = {
             this.palette.push(this.color(i));
         }
     },
-    render: function() {
-        var timing = performance.now(),
-            r = 0.7 + Math.sin(timing/9347)*0.4,
-            c = new Complex(r*Math.sin(timing/2000)-0.2, r*Math.cos(timing/2000));
-        
-        var imgData = this.ctx.getImageData(0,0,this.w,this.h),
-        buf = new ArrayBuffer(imgData.data.length),
-        buf8 = new Uint8ClampedArray(buf),
-        data = new Uint32Array(buf);
-
-        this.marker.mark(c);
-        
+    render: function(c) {
         var ws = this.w-this.step,
             x0 = this.w/2 - this.step/2,
             y0 = this.h/2 - this.step/2
@@ -106,14 +95,28 @@ JuliaDemo.prototype = {
                          yy > 0;
                          --yy, i0 += ws) {
                         for (var xx = this.step; xx > 0; --xx) {
-                            data[i0++] = v;
+                            this.data[i0++] = v;
                         }
                     }
                 }
             }
         }
-        imgData.data.set(buf8);
-        this.ctx.putImageData(imgData, 0,0);
+        this.imgData.data.set(this.buf8);
+        this.ctx.putImageData(this.imgData, 0,0);
+    },
+    animate: function() {
+        var timing = performance.now(),
+            r = 0.7 + Math.sin(timing/9347)*0.4,
+            c = new Complex(r*Math.sin(timing/2000)-0.2, r*Math.cos(timing/2000));
+        
+        this.imgData = this.ctx.getImageData(0,0,this.w,this.h);
+        this.buf = new ArrayBuffer(this.imgData.data.length);
+        this.buf8 = new Uint8ClampedArray(this.buf);
+        this.data = new Uint32Array(this.buf);
+
+        this.render(c);
+        this.marker.mark(c);
+        
         var elapsed = performance.now() - timing;
         var info = document.getElementById('info');
         if (info) {
@@ -127,7 +130,7 @@ JuliaDemo.prototype = {
 	}
         if (this.running) {
             var demo = this;
-            requestAnimFrame(function() {demo.render()})
+            requestAnimFrame(function() {demo.animate()})
         }
     }
 }
