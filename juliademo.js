@@ -7,6 +7,8 @@
 var Transform = function(pxw, pxh, z0, s) {
     this.w = pxw;
     this.h = pxh;
+    this.z0 = z0;
+    this.s = s;
     this.scale = 2*s/this.w;
     this.x0 = this.w/2 - z0.real/this.scale - 0.5;
     this.y0 = this.h/2 - z0.imag/this.scale;
@@ -106,8 +108,10 @@ JuliaDemo.prototype = {
     },
     animate: function() {
         var timing = performance.now(),
-            r = 0.7 + Math.sin(timing/9347)*0.4,
-            c = new Complex(r*Math.sin(timing/2000)-0.2, r*Math.cos(timing/2000));
+            r = 0.4 * this.marker.xform.s,
+            c = this.marker.xform.z0.
+            add(PolarComplex(r, timing/3801)).
+            add(PolarComplex(r, timing/2003));
         
         this.imgData = this.ctx.getImageData(0,0,this.w,this.h);
         this.buf = new ArrayBuffer(this.imgData.data.length);
@@ -140,7 +144,7 @@ function mandelbrot(canvas, xform) {
     var canvas = canvas,
         w = canvas.width,
         h = canvas.height,
-        maxiter = 100,
+        maxiter = Math.round(1/xform.scale),
         ctx = canvas.getContext('2d'),
         imgData = ctx.getImageData(0,0, w, h),
         buf = new ArrayBuffer(imgData.data.length),
