@@ -99,6 +99,11 @@ JuliaDemo.prototype = {
         }
     },
     render: function(c) {
+        var imgData = this.ctx.getImageData(0,0,this.w,this.h),
+        buf = new ArrayBuffer(imgData.data.length),
+        buf8 = new Uint8ClampedArray(buf),
+        data = new Uint32Array(buf);
+
         var ws = this.w-this.step,
             x0 = this.w/2 - this.step/2,
             y0 = this.h/2 - this.step/2
@@ -113,14 +118,14 @@ JuliaDemo.prototype = {
                          yy > 0;
                          --yy, i0 += ws) {
                         for (var xx = this.step; xx > 0; --xx) {
-                            this.data[i0++] = v;
+                            data[i0++] = v;
                         }
                     }
                 }
             }
         }
-        this.imgData.data.set(this.buf8);
-        this.ctx.putImageData(this.imgData, 0,0);
+        imgData.data.set(buf8);
+        this.ctx.putImageData(imgData, 0,0);
     },
     animate: function() {
         var timing = performance.now(),
@@ -129,11 +134,6 @@ JuliaDemo.prototype = {
             add(PolarComplex(r, timing/3801)).
             add(PolarComplex(r, timing/2003));
         
-        this.imgData = this.ctx.getImageData(0,0,this.w,this.h);
-        this.buf = new ArrayBuffer(this.imgData.data.length);
-        this.buf8 = new Uint8ClampedArray(this.buf);
-        this.data = new Uint32Array(this.buf);
-
         this.render(c);
         this.marker.mark(c);
         
