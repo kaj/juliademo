@@ -16,6 +16,13 @@ var Transform = function(pxw, pxh, z0, s) {
 
 
 Transform.prototype = {
+    zoom: function(z0) {
+        this.s /= 2;
+        this.scale = 2*this.s/this.w;
+        this.z0 = z0;
+        this.x0 = this.w/2 - z0.real/this.scale - 0.5;
+        this.y0 = this.h/2 - z0.imag/this.scale;
+    },
     z2px: function(z) {
         return { x: Math.round(z.real/this.scale + this.x0),
                  y: Math.round(z.imag/this.scale + this.y0) }
@@ -48,6 +55,15 @@ var JuliaDemo = function(canvas, marker) {
         }
     }
     this.marker.init(marker);
+    xform = this.marker.xform;
+    marker.onclick = function(event) {
+        px = marker.relMouseCoords(event)
+        z = xform.px2z(px.x, px.y)
+        xform.zoom(z);
+        document.getElementById('mandelinfo').innerHTML = 'z0: ' + z +
+            '<br>s: ' + xform.s;
+        mandelbrot(document.getElementById('mandel'), xform);
+    }
 }
 
 JuliaDemo.prototype = {
